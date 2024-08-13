@@ -1,0 +1,21 @@
+---
+- name: Install Apache
+  package:
+    name: httpd
+    state: present
+
+- name: Create index.html files
+  copy:
+    content: "{{ inventory_hostname }}"
+    dest: "/var/www/html/index.html"
+    mode: '0444'
+  loop:
+    - vm1.html
+    - vm2.html
+    - vm3.html
+
+- name: Start and enable Apache
+  service:
+    name: httpd
+    state: started
+    enabled: yes

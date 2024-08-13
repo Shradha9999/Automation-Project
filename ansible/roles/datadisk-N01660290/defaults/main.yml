@@ -1,0 +1,9 @@
+partitions:
+  - number: 1
+    size: 4G
+    fstype: xfs
+    mountpoint: /part1
+  - number: 2
+    size: 5G
+    fstype: ext4
+    mountpoint: /part2

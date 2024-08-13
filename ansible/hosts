@@ -1,0 +1,20 @@
+[linux]
+n01660290-u-vm1.canadacentral.cloudapp.azure.com ansible_user=n01660290
+n01660290-u-vm2.canadacentral.cloudapp.azure.com ansible_user=n01660290
+n01660290-u-vm3.canadacentral.cloudapp.azure.com ansible_user=n01660290
+
+[windows]
+n01660290-w-vm1.canadacentral.cloudapp.azure.com
+
+[os:children]
+linux
+windows
+
+[windows:vars]
+ansible_user = n01660290
+ansible_password = "Siju@123"
+ansible_connection = winrm
+ansible_port = 5985
+ansible_winrm_transport = ntlm
+ansible_winrm_server_cert_validation = ignore
+ansible_become = false

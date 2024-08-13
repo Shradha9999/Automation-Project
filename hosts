@@ -1,0 +1,9 @@
+[linux]
+n01660290-u-vm1.canadacentral.cloudapp.azure.com ansible_user=n01660290
+n01660290-u-vm2.canadacentral.cloudapp.azure.com ansible_user=n01660290
+n01660290-u-vm3.canadacentral.cloudapp.azure.com ansible_user=n01660290
+
+
+[os:children]
+linux
+

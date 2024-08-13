@@ -1,0 +1,10 @@
+---
+- name: Append lines to /etc/profile
+  lineinfile:
+    dest: /etc/profile
+    line: "{{ item }}"
+    create: yes
+    state: present
+  loop:
+    - "#Test block added by Ansible……N01660290"
+    - "export TMOUT=1500"

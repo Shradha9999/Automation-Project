@@ -1,0 +1,43 @@
+# roles/datadisk-N01660290/tasks/main.yml
+---
+- name: Create partitions on /dev/sdc
+  parted:
+    device: /dev/sdc
+    number: "{{ item.number }}"
+    part_start: "{{ item.start }}"
+    part_end: "{{ item.end }}"
+    state: present
+    part_type: primary
+  loop:
+    - { number: 1, start: 0%, end: 40% }
+    - { number: 2, start: 40%, end: 100% }
+
+- name: Format partitions
+  filesystem:
+    fstype: "{{ item.fstype }}"
+    dev: "/dev/sdc{{ item.number }}"
+  loop:
+    - { number: 1, fstype: 'xfs' }
+    - { number: 2, fstype: 'ext4' }
+
+- name: Ensure /part1 and /part2 directories exist
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - /part1
+    - /part2
+
+- name: Mount /dev/sdc1 on /part1
+  mount:
+    path: /part1
+    src: /dev/sdc1
+    fstype: xfs
+    state: mounted
+
+- name: Mount /dev/sdc2 on /part2
+  mount:
+    path: /part2
+    src: /dev/sdc2
+    fstype: ext4
+    state: mounted

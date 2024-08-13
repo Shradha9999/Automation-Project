@@ -1,0 +1,67 @@
+---
+# tasks file for user-N01660290
+- name: Ensure group "cloudadmins" is present
+  ansible.builtin.group:
+    name: "cloudadmins"
+    state: present
+
+- name: Ensure group "wheel" is present
+  ansible.builtin.group:
+    name: "wheel"
+    state: present
+
+- name: Create user accounts and add them to groups
+  ansible.builtin.user:
+    name: "{{ item }}"
+    groups: "cloudadmins,wheel"
+    state: present
+    create_home: yes
+    shell: "/bin/bash"
+  loop:
+    - user100
+    - user200
+    - user300
+
+- name: Create .ssh directory for users
+  ansible.builtin.file:
+    path: "/home/{{ item }}/.ssh"
+    state: directory
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: '0700'
+  loop:
+    - user100
+    - user200
+    - user300
+
+- name: Generate SSH keys for users
+  become: yes
+  ansible.builtin.openssh_keypair:
+    path: "/home/{{ item }}/.ssh/id_rsa"
+    type: rsa
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: '0600'
+    force: yes
+  loop:
+    - user100
+    - user200
+    - user300
+
+- name: Append id_rsa.pub to authorized_keys for each user
+  become: yes
+  ansible.builtin.shell:
+    cmd: "cat /home/{{ item }}/.ssh/id_rsa.pub >> /home/{{ item }}/.ssh/authorized_keys"
+    executable: /bin/bash
+  loop:
+    - user100
+    - user200
+    - user300
+
+- name: Download the private key for user100 to local computer
+  become: yes
+  ansible.builtin.fetch:
+    src: "/home/user100/.ssh/id_rsa"
+    dest: "/home/N01660290/user100_id_rsa"
+    flat: yes
+    mode: '0600'
